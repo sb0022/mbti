@@ -1,146 +1,94 @@
-
 import streamlit as st
 import time
 
-# 1. 페이지 기본 설정 (가장 먼저 실행되어야 합니다)
+# 1. 페이지 기본 설정
 st.set_page_config(
-    page_title="MBTI 찰떡 포켓몬 찾기",
-    page_icon="✨",
+    page_title="MBTI 소울 디저트 찾기",
+    page_icon="🍰",
     layout="centered"
 )
 
-# 2. MBTI별 포켓몬 데이터베이스 (이미지 링크 포함)
-pokemon_db = {
+# 2. MBTI별 디저트 데이터베이스
+dessert_db = {
     "INFP": {
-        "name": "뮤 (Mew)",
-        "emoji": "🦄",
-        "desc": "공상하기를 좋아하고 마음이 따뜻한 당신은 신비롭고 순수한 '뮤'와 닮았어요! 혼자만의 시간을 소중히 여기며 언제나 평화를 바랍니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png"
+        "name": "말랑 촉촉 수플레 팬케이크",
+        "emoji": "🥞",
+        "desc": "구름처럼 부드럽고 몽글몽글한 수플레 팬케이크는 감수성이 풍부하고 여린 당신과 닮았어요! 입안에서 사르르 녹는 달콤한 상상 같은 디저트입니다.",
+        "image": "🎯"
     },
     "ENFP": {
-        "name": "피카츄 (Pikachu)",
-        "emoji": "⚡",
-        "desc": "언제나 에너지가 넘치고 통통 튀는 당신은 모두의 사랑을 받는 '피카츄' 그 자체! 호기심이 많고 주변 사람들에게 밝은 에너지를 전파해요.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+        "name": "알록달록 레인보우 마카롱",
+        "emoji": "🌈",
+        "desc": "톡톡 튀는 비주얼과 다양한 맛을 가진 마카롱은 인간 비타민인 당신 그 자체! 어떤 색깔(매력)을 꺼내도 모두를 기분 좋게 만드는 마법이 있어요.",
+        "image": "✨"
     },
     "INFJ": {
-        "name": "가디안 (Gardevoir)",
-        "emoji": "🔮",
-        "desc": "통찰력이 뛰어나고 세심한 당신은 트레이너를 온 힘을 다해 지키는 '가디안'과 어울려요. 깊은 공감 능력과 신비로운 분위기를 가지고 있습니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/282.png"
+        "name": "은은한 말차 테린느",
+        "emoji": "🍵",
+        "desc": "겉은 심플하지만 속은 깊고 진한 풍미를 풍기는 말차 테린느는 생각이 깊고 신비로운 당신과 닮았어요. 알면 알수록 진국인 매력이 있습니다.",
+        "image": "🌿"
     },
     "ENFJ": {
-        "name": "토게키스 (Togekiss)",
-        "emoji": "🕊️",
-        "desc": "주변에 행복과 평화를 전파하는 다정한 리더인 당신은 '토게키스'와 똑 닮았어요! 사람들을 격려하고 이끄는 데 천부적인 재능이 있습니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/468.png"
+        "name": "나누어 먹는 딸기 생크림 케이크",
+        "emoji": "🍰",
+        "desc": "누구에게나 호불호 없이 사랑받고, 파티에 빠질 수 없는 딸기 케이크는 다정한 리더인 당신 같아요! 주변 사람들과 행복을 나눌 때 가장 빛납니다.",
+        "image": "🍓"
     },
     "INTJ": {
-        "name": "뮤츠 (Mewtwo)",
-        "emoji": "🧠",
-        "desc": "전략적이고 독립적이며 완벽을 추구하는 당신은 냉철한 천재 '뮤츠'와 닮았네요! 복잡한 문제를 해결하는 것을 좋아하고 주관이 뚜렷합니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
+        "name": "밀도 100% 다크 초콜릿 퐁당",
+        "emoji": "🍫",
+        "desc": "완벽주의적이고 주관이 뚜렷한 당신은 카카오 함량이 높은 씁쓸달콤한 다크 초콜릿 같아요. 겉은 단단해 보이지만 속은 뜨거운 열정(가나슈)으로 가득 차 있죠.",
+        "image": "☕"
     },
     "ENTJ": {
-        "name": "리자몽 (Charizard)",
-        "emoji": "🔥",
-        "desc": "강력한 카리스마와 당당한 자신감을 가진 당신은 열정적인 리더 '리자몽'입니다! 목표를 향해 거침없이 나아가며 팀을 승리로 이끕니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png"
+        "name": "고급스러운 에스프레소 아포가토",
+        "emoji": "🍨",
+        "desc": "에너제틱하고 효율성을 중시하는 당신에게는 차가운 아이스크림을 단번에 녹이는 뜨거운 에스프레소 같은 아포가토가 딱! 강렬하고 확실한 인상을 남깁니다.",
+        "image": "🔥"
     },
     "INTP": {
-        "name": "폴리곤 (Porygon)",
-        "emoji": "💻",
-        "desc": "논리적이고 호기심이 많은 분석가인 당신은 데이터로 이루어진 포켓몬 '폴리곤'과 어울려요! 새로운 지식을 탐구하고 시스템을 이해하는 것을 즐깁니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png"
+        "name": "겹겹이 정교한 밀푀유",
+        "emoji": "🥮",
+        "desc": "바삭한 페이스트리와 크림이 정교한 논리처럼 쌓여있는 밀푀유! 호기심 많고 분석적인 당신의 뇌 구조(?)처럼 복잡하고도 완벽한 맛을 자랑합니다.",
+        "image": "🔍"
     },
     "ENTP": {
-        "name": "팬텀 (Gengar)",
-        "emoji": "😈",
-        "desc": "위트 있고 장난기를 좋아하는 재치 만점 당신은 '팬텀'과 찰떡궁합! 고정관념을 깨는 것을 좋아하고 토론과 말싸움에서 절대 지지 않아요.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
+        "name": "입안에서 팡팡! 팝핑 캔디 아이스크림",
+        "emoji": "🍦",
+        "desc": "어디로 튈지 모르는 재치와 유머 감각을 가진 당신은 입안에서 불꽃놀이가 터지는 팝핑 캔디 아이스크림! 지루할 틈을 주지 않는 매력 덩어리입니다.",
+        "image": "💥"
     },
     "ISFP": {
-        "name": "이브이 (Eevee)",
-        "emoji": "🦊",
-        "desc": "예술적 감각이 뛰어나고 유연한 사고를 가진 당신은 무한한 가능성의 '이브이'입니다! 갈등을 싫어하며, 상황에 맞게 자신을 변화시킬 줄 압니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"
+        "name": "나른하고 달콤한 커스터드 푸딩",
+        "emoji": "🍮",
+        "desc": "탱글탱글 부드럽고 평화로운 푸딩은 예술가 기질이 있는 당신의 힐링 소울 푸드! 갈등 없이 누구에게나 부드럽게 맞춰주는 말랑한 성격이에요.",
+        "image": "💛"
     },
     "ESFP": {
-        "name": "푸린 (Jigglypuff)",
-        "emoji": "🎤",
-        "desc": "어디서나 주목받는 분위기 메이커인 당신은 스타성이 넘치는 '푸린'과 닮았어요! 흥이 많고 사람들과 어울려 노는 것을 가장 좋아합니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png"
+        "name": "화려한 축제 같은 크로플 탑",
+        "emoji": "🧇",
+        "desc": "아이스크림, 브라운 치즈, 시럽까지 듬뿍 올라간 화려한 크로플은 트렌디하고 흥이 넘치는 당신과 똑 닮았어요! 언제나 분위기를 최고조로 만듭니다.",
+        "image": "🎉"
     },
     "ISTP": {
-        "name": "개굴닌자 (Greninja)",
-        "emoji": "🥷",
-        "desc": "말보다는 행동! 상황 적응력이 뛰어나고 손재주가 좋은 당신은 시크하고 민첩한 '개굴닌자'입니다. 효율성을 중요하게 생각하는 쿨한 성격이에요.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png"
+        "name": "겉바속촉 까눌레",
+        "emoji": "🥮",
+        "desc": "겉은 딱딱하고 시크해 보이지만, 속은 촉촉하고 부드러운 반전 매력의 까눌레! 효율적이고 말수가 적지만 내 사람에겐 따뜻한 당신의 츤데레 매력과 같아요.",
+        "image": "🔨"
     },
     "ESTP": {
-        "name": "루카리오 (Lucario)",
-        "emoji": "👊",
-        "desc": "스릴을 즐기고 에너제틱한 당신은 실전 감각이 뛰어난 '루카리오'와 어울려요! 몸으로 부딪히며 배우는 것을 좋아하고 위기 대처 능력이 만점입니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png"
+        "name": "불 맛 가득 크렘 브륄레",
+        "emoji": "🍮",
+        "desc": "단단한 설탕 표면을 스푼으로 탕! 깨부수는 재미가 있는 크렘 브륄레. 스릴을 즐기고 행동파인 당신처럼 짜릿하고 달콤한 매력이 있습니다.",
+        "image": "🔨"
     },
     "ISFJ": {
-        "name": "치코리타 (Chikorita)",
-        "emoji": "🍃",
-        "desc": "책임감이 강하고 주변 사람들을 헌신적으로 챙기는 당신은 다정한 '치코리타'와 닮았어요! 차분하고 안정적인 환경을 만들며 모두에게 편안함을 줍니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/152.png"
+        "name": "따뜻하고 든든한 에그타르트",
+        "emoji": "🥧",
+        "desc": "부드러운 커스터드 크림이 가득 차 있어 한 입 베어 물면 포근해지는 에그타르트! 주변 사람들을 조용하고 헌신적으로 챙겨주는 당신의 따뜻함과 닮았습니다.",
+        "image": "🐣"
     },
     "ESFJ": {
-        "name": "해피너스 (Blissey)",
-        "emoji": "🥚",
-        "desc": "타인의 행복이 곧 나의 행복! 친절하고 사교적인 당신은 모두를 치유해주는 '해피너스'입니다. 리액션이 좋아서 주변에 늘 사람이 모여요.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/242.png"
-    },
-    "ISTJ": {
-        "name": "꼬부기 (Squirtle)",
-        "emoji": "🐢",
-        "desc": "원칙을 지키고 매사에 신중하며 철저한 당신은 모범생 '꼬부기'를 닮았군요! 약속을 잘 지키고 맡은 바 임무를 묵묵히 완수하는 신뢰감 100%의 사람입니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png"
-    },
-    "ESTJ": {
-        "name": "윈디 (Arcanine)",
-        "emoji": "🦁",
-        "desc": "체계적이고 리더십이 있으며 의리가 넘치는 당신은 든든한 '윈디'와 같습니다! 공정함을 중요시하고 규칙에 따라 일을 완벽하게 처리합니다.",
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/59.png"
-    }
-}
-
-# 3. UI 꾸미기
-st.title("🐾 나의 MBTI 찰떡 포켓몬은?")
-st.write("당신의 MBTI를 선택하고, 영혼의 파트너 포켓몬을 만나보세요! ✨")
-st.markdown("---")
-
-# MBTI 선택 박스 (알파벳 정렬 순)
-mbti_list = sorted(list(pokemon_db.keys()))
-selected_mbti = st.selectbox("🎯 당신의 MBTI를 선택하세요:", mbti_list, index=None, placeholder="여기 치고 선택하거나 골라보세요 👀")
-
-if selected_mbti:
-    # 귀여운 로딩 효과
-    with st.spinner('🔮 당신의 성향을 분석해서 포켓몬을 소환하는 중...'):
-        time.sleep(1.5)  # 1.5초 대기 시각 효과
-    
-    # 선택된 포켓몬 데이터 가져오기
-    pokemon = pokemon_db[selected_mbti]
-    
-    # 결과 화면 구성
-    st.balloons() # 축하 풍선 팡팡!
-    
-    st.success(def_text := f"✨ {selected_mbti}인 당신에게 딱 맞는 포켓몬은... ✨")
-    
-    # 2단 레이아웃 분할 (왼쪽: 이미지, 오른쪽: 설명)
-    col1, col2 = st.columns([1, 1.2])
-    
-    with col1:
-        st.image(pokemon["image"], use_container_width=True)
-        
-    with col2:
-        st.subheader(f"{pokemon['emoji']} {pokemon['name']}")
-        st.write("")
-        st.info(pokemon["desc"])
-        
-    st.markdown("---")
-    st.caption("💡 친구들에게 링크를 공유해서 서로 어떤 포켓몬이 나왔는지 비교해보세요!")
+        "name": "오순도순 츄러스 세트",
+        "emoji": "🥨",
+        "desc": "놀이공원이나 축제에서 다 함께 나눠 먹을 때 가장 맛
