@@ -91,4 +91,48 @@ dessert_db = {
     "ESFJ": {
         "name": "오순도순 츄러스 세트",
         "emoji": "🥨",
-        "desc": "놀이공원이나 축제에서 다 함께 나눠 먹을 때 가장 맛
+        "desc": "놀이공원이나 축제에서 다 함께 나눠 먹을 때 가장 맛있는 츄러스! 사교적이고 리액션이 좋아 늘 친구들을 몰고 다니는 당신에게 어울리는 다정한 디저트입니다.",
+        "image": "연합"
+    },
+    "ISTJ": {
+        "name": "정갈하고 클래식한 뉴욕 치즈케이크",
+        "emoji": "🧀",
+        "desc": "유행을 타지 않고 언제나 변함없는 묵직한 맛을 주는 치즈케이크! 원칙을 지키고 매사에 철저하며 신뢰감을 주는 당신의 정석적인 매력과 똑 닮았습니다.",
+        "image": "📏"
+    },
+    "ESTJ": {
+        "name": "체계적으로 구워낸 수제 쿠키 세트",
+        "emoji": "🍪",
+        "desc": "재료 계량부터 굽기까지 오차 없이 완벽하게 만들어진 수제 쿠키! 책임감이 강하고 조직적인 리더십을 발휘하는 당신처럼 정성스럽고 든든한 디저트입니다.",
+        "image": "💼"
+    }
+}
+
+# 3. UI 디자인
+st.title("🍰 나의 MBTI 소울 디저트 찾기")
+st.write("내 성격과 똑 닮은 달콤 쌉싸름한 '인생 디저트'는 무엇일까요? 👀")
+st.markdown("---")
+
+# MBTI 선택
+mbti_list = sorted(list(dessert_db.keys()))
+selected_mbti = st.selectbox("🎯 당신의 MBTI를 선택해 주세요:", mbti_list, index=None, placeholder="여기를 눌러 선택하세요 😋")
+
+if selected_mbti:
+    # 달콤한 로딩 이펙트
+    with st.spinner('🧁 당신의 성향을 반죽해서 디저트를 굽는 중...'):
+        time.sleep(1.5)
+    
+    dessert = dessert_db[selected_mbti]
+    
+    # 결과 연출
+    st.snow() # 겨울 감성 대신 달콤함이 흩날리는 효과! (눈송이가 내립니다 ❄️)
+    
+    st.success(f"💖 {selected_mbti}인 당신에게 당 충전을 선사할 소울 디저트는? 💖")
+    
+    # 카드 레이아웃 스타일로 보여주기
+    st.write("")
+    st.info(f"### {dessert['emoji']} {dessert['name']}")
+    st.write(dessert['desc'])
+    
+    st.markdown("---")
+    st.caption("☕ 오늘 가고 싶은 카페가 있다면, 이 디저트가 있는지 확인해 보세요!")
